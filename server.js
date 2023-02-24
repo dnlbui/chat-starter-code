@@ -37,10 +37,14 @@ const server = http.createServer((req, res) => {
 
 // TODO
 // Exercise 3: Create the WebSocket Server using the HTTP server
+const wsServer = new WebSocket.Server({ server });
 
 
 // TODO
 // Exercise 5: Respond to connection events 
+wsServer.on('connection', (socket)=>{
+  console.log('new connection!')
+})
   // Exercise 6: Respond to client messages
   // Exercise 7: Send a message back to the client, echoing the message received
   // Exercise 8: Broadcast messages received to all other clients
