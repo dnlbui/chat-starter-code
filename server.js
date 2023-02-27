@@ -42,8 +42,9 @@ const wsServer = new WebSocket.Server({ server });
 
 // TODO
 // Exercise 5: Respond to connection events 
+// socket is the client connection.
 wsServer.on('connection', (socket)=>{
-  console.log('new connection!')
+  console.log('A new client has connected to the server!')
 })
   // Exercise 6: Respond to client messages
   // Exercise 7: Send a message back to the client, echoing the message received
