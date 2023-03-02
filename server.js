@@ -2,10 +2,12 @@
 ///////////// IMPORTS + VARIABLES /////////////
 ///////////////////////////////////////////////
 
+//http is a protocol that allows for communication between a client and a server. It is the foundation of the web. The http module provides an API for creating HTTP servers and clients.
 const http = require('http'); 
 const CONSTANTS = require('./utils/constants.js');
 const fs = require('fs');
 const path = require('path');
+// WebSockets are a protocol that allows for bidirectional communication. ws is a library that implements the WebSocket protocol. Instaniate a new WebSocket server by calling the WebSocket.Server constructor.
 const WebSocket = require('ws');
 
 // You may choose to use the constants defined in the file below
@@ -37,7 +39,8 @@ const server = http.createServer((req, res) => {
 
 // TODO
 // Exercise 3: Create the WebSocket Server using the HTTP server
-// calling WebSocket.Server instatiates 
+// calling WebSocket.Server instatiates a new WebSocket server!
+// pass in the server as an argument. Key word: server. Value: server. es6 syntax.
 const wsServer = new WebSocket.Server({ server });
 
 
