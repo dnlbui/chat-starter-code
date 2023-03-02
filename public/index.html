@@ -81,12 +81,15 @@
 
         // TODO:
         // Exercise 5: Respond to connections by defining the .onopen event handler.
+        // respond to connection events
         wsClient.onopen = () => {
           console.log("Connection to the WebSocket server established!");
         };
         // TODO:
         // Exercise 7: Respond to messages from the servery by defining the .onmessage event handler
+        // respond to message events
         wsClient.onmessage = (messageEvent) => {
+          // .data is property of messageEvent
           const message = messageEvent.data;
           showMessageReceived(message);
         };
@@ -134,7 +137,7 @@
         showNewMessage(message, "sending");
       }
       function showMessageReceived(message) {
-        showNewMessage(message, "receiving");
+        showNewMessage(`Message Received: ${message}`, "receiving");
       }
 
       // This function displays a message in the messages container node.
