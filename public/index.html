@@ -27,6 +27,7 @@
 
       // This variable will hold the WebSocket client connection.
       // Initialize in the init() function
+      // websocket is a built-in object in the browser
       let wsClient;
 
       ////////////////////////////////////////////////
@@ -38,11 +39,16 @@
 
       // Event handler when the client enters a message
       messageForm.onsubmit = function (e) {
+        // Prevent the form from submitting
+        // This is necessary because the form is set to submit on enter
+        // We want to send the message on the button click instead
         e.preventDefault();
 
         // Get the message from the messageBox
         const message = messageBox.value;
         // Render the sent message on the client as your own and reset the messageBox
+        // showMessageSent is a helper function defined below
+        // It takes in a message and renders it in the messages container
         showMessageSent(message);
         messageBox.value = "";
 
@@ -61,14 +67,16 @@
 
         // If a WebSocket connection exists already, close it
         if (wsClient) {
+          // Remove all event handlers
           wsClient.onerror = wsClient.onopen = wsClient.onclose = null;
+          // Close the WebSocket connection
           wsClient.close();
         }
 
         // TODO:
         // Exercise 4: Create a new WebSocket connection with the server using the ws protocol.
         const URL = "ws://localhost:" + PORT;
-
+        // Create a new WebSocket client connection
         wsClient = new WebSocket(URL);
 
         // TODO:
@@ -78,6 +86,10 @@
         };
         // TODO:
         // Exercise 7: Respond to messages from the servery by defining the .onmessage event handler
+        wsClient.onmessage = (messageEvent) => {
+          const message = messageEvent.data;
+          showMessageReceived(message);
+        };
         // Exercise 9: Parse custom message types, formatting each message based on the type.
 
         /* Note:
@@ -107,6 +119,7 @@
 
         // TODO:
         // Exercise 6: Send the message from the messageBox to the server
+        wsClient.send(message);
         // Exercise 9: Send the message in a custom message object with .type and .payload properties
       }
 
