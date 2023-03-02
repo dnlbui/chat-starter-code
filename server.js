@@ -50,8 +50,19 @@ const wsServer = new WebSocket.Server({ server });
   // Exercise 6: Respond to client messages
   // Exercise 7: Send a message back to the client, echoing the message received
   // Exercise 8: Broadcast messages received to all other clients
+  //.on is a method that takes in an event and a callback function. The callback function is invoked when the event is emitted.
+  //socket is the client connection. socket is an object representing the connection to the invididual/specific client.
+  //socket.on is a method that takes in an event and a callback function. The callback function is invoked when the event is emitted.
+  //socket.send is a method that takes in a message and sends it to the client.
+  //socket.close is a method that closes the connection to the client.
+  //socket.readyState is a property that returns the state of the connection. 1 is open, 2 is closing, 3 is closed.
 wsServer.on('connection', (socket)=>{
   console.log('A new client has connected to the server!')
+
+  socket.on('message', (data)=>{
+    console.log(data);
+    socket.send(data);
+  })
 })
 
 ///////////////////////////////////////////////
