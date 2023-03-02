@@ -58,7 +58,8 @@ const wsServer = new WebSocket.Server({ server });
   //socket.readyState is a property that returns the state of the connection. 1 is open, 2 is closing, 3 is closed.
 wsServer.on('connection', (socket)=>{
   console.log('A new client has connected to the server!')
-
+  // socket.on is a method that takes in an event and a callback function. The callback function is invoked when the event is emitted.
+  // event handler for the 'message' event. The callback function is invoked when the event is emitted.
   socket.on('message', (data)=>{
     console.log(data);
     broadcast(data, socket);
