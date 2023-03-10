@@ -6,6 +6,16 @@ const CLIENT = {
   }
 };
 
+// Might want to distringuish between server and client messages and broadcast messages. i.e. time stamp.
+const SERVER = {
+  MESSAGE: {
+
+  },
+  BROADCAST: {
+
+  }
+};
+
 // ***This check allows the module to be used in the client and the server
 // module is undefined in the client. module.exports is undefined in the server.
 // This is a common pattern to check if the module is being used in the client or the server.
