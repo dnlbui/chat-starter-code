@@ -60,7 +60,7 @@
       ////////////////////////////////////////////////
 
       function init() {
-        /* Note: 
+        /* Note:
       Though the conditional block below is not necessary, it is a best practice to avoid
       tampering with a cluttered namespace.
       */
@@ -84,14 +84,28 @@
         // respond to connection events
         wsClient.onopen = () => {
           console.log("Connection to the WebSocket server established!");
+          const data = { type: "NEW_USER" };
+          wsClient.send(JSON.stringify(data));
         };
         // TODO:
         // Exercise 7: Respond to messages from the servery by defining the .onmessage event handler
         // respond to message events
+        // everytime recieve message showing message in chat box
         wsClient.onmessage = (messageEvent) => {
           // .data is property of messageEvent
-          const message = messageEvent.data;
-          showMessageReceived(message);
+          // JSON.parse changes string back into object/javascript...
+          const { type, payload } = JSON.parse(messageEvent.data);
+          //showMessageReceived(message);
+          switch (type) {
+            case "NEW_USER":
+              showMessageReceived("<em>New user has joined!</em>");
+              break;
+            case "NEW_MESSAGE":
+              showMessageReceived(payload.message);
+              break;
+            default:
+              break;
+          }
         };
         // Exercise 9: Parse custom message types, formatting each message based on the type.
 
@@ -122,8 +136,13 @@
 
         // TODO:
         // Exercise 6: Send the message from the messageBox to the server
-        wsClient.send(message);
         // Exercise 9: Send the message in a custom message object with .type and .payload properties
+        const data = {
+          type: "NEW_MESSAGE",
+          payload: { message: message },
+        };
+
+        wsClient.send(JSON.stringify(data));
       }
 
       ////////////////////////////////////////////////
@@ -137,7 +156,7 @@
         showNewMessage(message, "sending");
       }
       function showMessageReceived(message) {
-        showNewMessage(`Message Received: ${message}`, "receiving");
+        showNewMessage(message, "receiving");
       }
 
       // This function displays a message in the messages container node.
