@@ -25,15 +25,17 @@
       ////////////// VARIABLES ///////////////////////
       ////////////////////////////////////////////////
 
-      // This variable will hold the WebSocket client connection.
+      // This variable will hold the WebSocket **client** connection.
       // Initialize in the init() function
       // websocket is a built-in object in the browser
       let wsClient;
+      const username = prompt("Enter a username");
 
       ////////////////////////////////////////////////
       //////////////// DOM SETUP /////////////////////
       ////////////////////////////////////////////////
 
+      // document.querySelector is a built-in function that returns the first element that matches the specified selector
       const messageBox = document.querySelector("#messageBox");
       const messageForm = document.querySelector("#messageForm");
 
@@ -77,6 +79,7 @@
         // Exercise 4: Create a new WebSocket connection with the server using the ws protocol.
         const URL = "ws://localhost:" + PORT;
         // Create a new WebSocket client connection
+        // websocket is a built-in object in the browser
         wsClient = new WebSocket(URL);
 
         // TODO:
@@ -84,30 +87,43 @@
         // respond to connection events
         wsClient.onopen = () => {
           console.log("Connection to the WebSocket server established!");
-          const data = { type: "NEW_USER" };
+          const data = {
+            type: "NEW_USER",
+            payload: { username },
+          };
+          // wsClient.send is a built-in function that sends a message to the server
+          // JSON.stringify changes object into string
           wsClient.send(JSON.stringify(data));
         };
         // TODO:
-        // Exercise 7: Respond to messages from the servery by defining the .onmessage event handler
+        // Exercise 7: Respond to messages from the server by defining the .onmessage event handler
         // respond to message events
         // everytime recieve message showing message in chat box
         wsClient.onmessage = (messageEvent) => {
           // .data is property of messageEvent
+          // Exercise 9: Parse custom message types, formatting each message based on the type.
+          // JSON.parse changes string back into object/javascript...
+          // JSON.parse is a built-in function that parses a JSON string, constructing the JavaScript value or object described by the string
+          // messageEvent.data is a string that contains message  and type of message (NEW_USER, NEW_MESSAGE) in JSON format (stringified object)
           // JSON.parse changes string back into object/javascript...
           const { type, payload } = JSON.parse(messageEvent.data);
           //showMessageReceived(message);
           switch (type) {
             case "NEW_USER":
-              showMessageReceived("<em>New user has joined!</em>");
+              showMessageReceived(
+                "<em>" + payload.username + " has joined!</em>"
+              );
+              // break is a built-in function that stops the execution of a function
               break;
             case "NEW_MESSAGE":
-              showMessageReceived(payload.message);
+              showMessageReceived(
+                `<strong>[${payload.username}]</strong> ${payload.message}`
+              );
               break;
             default:
               break;
           }
         };
-        // Exercise 9: Parse custom message types, formatting each message based on the type.
 
         /* Note:
       The event handlers below are useful for properly cleaning up a closed/broken WebSocket client connection.
@@ -115,15 +131,20 @@
       */
 
         // .onclose is executed when the socket connection is closed
+        // This can happen when the server is shut down or the client loses internet connection
+        // This is a good place to clean up the client connection
         wsClient.onclose = (event) => {
           showMessageReceived("No WebSocket connection :(");
           wsClient = null;
         };
 
         // .onerror is executed when error event occurs on the WebSocket connection
+        // .onerror is a built-in function that handles errors
+        // This is a good place to clean up the client connection
         wsClient.onerror = (event) => {
+          // console.error is a built-in function that writes a message to the error console
           console.error("WebSocket error observed:", event);
-          wsClient = null;
+          wsClient = null; // close the connection???
         };
       }
 
@@ -139,9 +160,11 @@
         // Exercise 9: Send the message in a custom message object with .type and .payload properties
         const data = {
           type: "NEW_MESSAGE",
-          payload: { message: message },
+          // payload is an object that contains message
+          // using an object to send message creates flexibility for future changes like sending more than just message
+          payload: { message, username },
         };
-
+        // .send only takes serializable data types such as string, number, boolean, object, array. In this case a string
         wsClient.send(JSON.stringify(data));
       }
 
@@ -153,6 +176,9 @@
 
       // These functions are just aliases of the showNewMessage function
       function showMessageSent(message) {
+        // showNewMessage is a helper function defined below
+        // It takes in a message and renders it in the messages container
+        // The second argument is the className of the message element
         showNewMessage(message, "sending");
       }
       function showMessageReceived(message) {
@@ -163,6 +189,9 @@
       // className may either be 'mine' or 'yours' (see styles.css for the distinction)
       function showNewMessage(message, className) {
         // Create a text node element for the message
+        // document.createElement is a built-in function that creates an HTML element with the specified tag
+        // .innerHTML is a property of the textNode element
+        // .className is a property of the textNode element
         const textNode = document.createElement("div");
         textNode.innerHTML = message;
         textNode.className = "message";
@@ -170,10 +199,14 @@
         // Wrap the text node in a message element
         const messageNode = document.createElement("div");
         messageNode.className = "messages " + className;
+        // .appendChild is a method of the messageNode element that appends a node as the last child of a node
         messageNode.appendChild(textNode);
 
         // Append the messageNode to the messages container element
+        // messages is a global variable defined above
         messages.appendChild(messageNode);
+        // .scrollTop is a property of the messages container element that returns the number of pixels that the content of an element is scrolled vertically
+        // .scrollHeight is a property of the messages container element that returns the height of an element's content, including content not visible on the screen due to overflow
         messages.scrollTop = messages.scrollHeight;
       }
 
