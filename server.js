@@ -11,7 +11,7 @@ const path = require('path');
 const WebSocket = require('ws');
 
 // You may choose to use the constants defined in the file below
-const { PORT, CLIENT } = CONSTANTS;
+const { PORT, CLIENT, SERVER } = CONSTANTS;
 
 ///////////////////////////////////////////////
 ///////////// HTTP SERVER LOGIC ///////////////
@@ -66,8 +66,32 @@ wsServer.on('connection', (socket)=>{
   // before broadcast was used, the message was sent back to the client that sent the message. With socket.send, the message is sent back to the client that sent the message.
   socket.on('message', (data)=>{
     console.log(data);
-    // broadcast the message to all connected clients
-    broadcast(data, socket);
+
+    const { type, payload } = JSON.parse(data);
+
+    //showMessageReceived(message);
+    switch (type) {
+      case CLIENT.MESSAGE.NEW_USER:
+        const time = new Date().toLocaleString();
+        payload.time = time;
+        const dataWithTime = {
+          type: SERVER.BROADCAST.NEW_USER_WITH_TIME,
+          payload
+        }
+        // broadcast the message to all connected clients
+        // Need to use JSON.stringify because the data is an object. The data needs to be a string when it is sent to the client using a websocket.
+        broadcast(JSON.stringify(dataWithTime));
+        // break is a built-in function that stops the execution of a function
+        break;
+      case CLIENT.MESSAGE.NEW_MESSAGE:
+        // broadcast the message to all connected clients
+        broadcast(data, socket);
+        break;
+      default:
+        break;
+    }
+
+
   })
 })
 
