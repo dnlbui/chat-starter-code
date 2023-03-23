@@ -109,9 +109,13 @@
           const { type, payload } = JSON.parse(messageEvent.data);
           //showMessageReceived(message);
           switch (type) {
-            case CLIENT.MESSAGE.NEW_USER:
+            case SERVER.BROADCAST.NEW_USER_WITH_TIME:
               showMessageReceived(
-                "<em>" + payload.username + " has joined!</em>"
+                "<em>" +
+                  payload.username +
+                  " has joined at " +
+                  payload.time +
+                  "!</em>"
               );
               // break is a built-in function that stops the execution of a function
               break;

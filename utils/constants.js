@@ -12,7 +12,7 @@ const SERVER = {
 
   },
   BROADCAST: {
-
+    NEW_USER_WITH_TIME: 'NEW_USER_WITH_TIME',
   }
 };
 
@@ -25,6 +25,7 @@ const SERVER = {
 if (typeof module !== "undefined" && module.exports) {
   module.exports = exports = {
     PORT,
-    CLIENT
+    CLIENT,
+    SERVER
   }
 }
