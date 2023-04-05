@@ -25,8 +25,12 @@ const server = http.createServer((req, res) => {
   // determine the contentType by the file extension
   const extname = path.extname(filePath);
   let contentType = 'text/html';
-  if (extname === '.js') contentType = 'text/javascript';
-  else if (extname === '.css') contentType = 'text/css';
+  if (extname === '.js') {
+    contentType = 'text/javascript';
+  }
+  else if (extname === '.css') {
+    contentType = 'text/css';
+  }
 
   // pipe the proper file to the res object
   res.writeHead(200, { 'Content-Type': contentType });
